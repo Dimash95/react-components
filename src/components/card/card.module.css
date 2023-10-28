@@ -1,0 +1,30 @@
+.allCards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1220px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.card {
+  display: flex;
+  gap: 20px;
+  max-width: 500px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.title {
+  margin-top: 10px;
+  max-width: 200px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.synopsis {
+  width: 300px;
+}
