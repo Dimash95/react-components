@@ -6,9 +6,10 @@ import { ItemResponse } from "./entities/item-response";
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  async function displayItems() {
-    const itemResponses = (await getAnime()) as unknown as {
+  async function displayItems(searchedAnime: string = "") {
+    const itemResponses = (await getAnime(searchedAnime)) as unknown as {
       data: ItemResponse[];
     };
     if (itemResponses) {
@@ -29,10 +30,26 @@ function App() {
     displayItems();
   }, []);
 
+  function handleSearch() {
+    displayItems(searchQuery);
+    console.log(123);
+  }
+
   return (
-    <>
+    <div className="wrapper">
+      <div className="search">
+        <input
+          className="input"
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button className="button" onClick={handleSearch}>
+          Search
+        </button>
+      </div>
       <Card items={items} />
-    </>
+    </div>
   );
 }
 
