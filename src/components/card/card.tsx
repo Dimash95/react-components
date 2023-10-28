@@ -1,4 +1,4 @@
-import styles from "./card.module.css";
+import styles from './card.module.css';
 
 interface Item {
   title: string;

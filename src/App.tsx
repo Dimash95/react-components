@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { getAnime } from "./api/get-anime";
-import Search from "./components/search";
-import Card from "./components/card";
-import { Item } from "./entities/item";
-import { ItemResponse } from "./entities/item-response";
+import { useState, useEffect } from 'react';
+import { getAnime } from './api/get-anime';
+import Search from './components/search';
+import Card from './components/card';
+import { Item } from './entities/item';
+import { ItemResponse } from './entities/item-response';
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
-  async function displayItems(searchedAnime: string = "") {
+  async function displayItems(searchedAnime: string = '') {
     const itemResponses = (await getAnime(searchedAnime)) as unknown as {
       data: ItemResponse[];
     };
@@ -33,10 +33,10 @@ function App() {
 
   function handleSearch() {
     displayItems(searchQuery);
-    localStorage.setItem("Searched anime", searchQuery);
+    localStorage.setItem('Searched anime', searchQuery);
 
-    const searchedAnime = localStorage.getItem("Searched anime");
-    setSearchQuery(searchedAnime != null ? searchedAnime : "");
+    const searchedAnime = localStorage.getItem('Searched anime');
+    setSearchQuery(searchedAnime != null ? searchedAnime : '');
   }
 
   return (

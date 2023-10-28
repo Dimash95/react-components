@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import styles from "./search.module.css";
+import { Dispatch, SetStateAction } from 'react';
+import styles from './search.module.css';
 
 interface Props {
   searchQuery: string;
