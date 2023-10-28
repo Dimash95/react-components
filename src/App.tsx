@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { getAnime } from "./api/get-anime";
+import Search from "./components/search";
 import Card from "./components/card";
 import { Item } from "./entities/item";
 import { ItemResponse } from "./entities/item-response";
-import Search from "./components/search";
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
@@ -33,6 +33,10 @@ function App() {
 
   function handleSearch() {
     displayItems(searchQuery);
+    localStorage.setItem("Searched anime", searchQuery);
+
+    const searchedAnime = localStorage.getItem("Searched anime");
+    setSearchQuery(searchedAnime != null ? searchedAnime : "");
   }
 
   return (

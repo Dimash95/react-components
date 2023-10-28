@@ -1,0 +1,13 @@
+.search {
+  display: flex;
+  gap: 10px;
+  height: 30px;
+}
+
+.input {
+  width: 300px;
+}
+
+.button {
+  cursor: pointer;
+}

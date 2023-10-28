@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import styles from "./search.module.css";
 
 interface Props {
   searchQuery: string;
@@ -8,14 +9,14 @@ interface Props {
 
 function Search({ searchQuery, setSearchQuery, handleSearch }: Props) {
   return (
-    <div className="search">
+    <div className={styles.search}>
       <input
-        className="input"
+        className={styles.input}
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button className="button" onClick={handleSearch}>
+      <button className={styles.button} onClick={handleSearch}>
         Search
       </button>
     </div>
