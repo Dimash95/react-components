@@ -3,6 +3,7 @@ import { getAnime } from "./api/get-anime";
 import Card from "./components/card";
 import { Item } from "./entities/item";
 import { ItemResponse } from "./entities/item-response";
+import Search from "./components/search";
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
@@ -32,22 +33,15 @@ function App() {
 
   function handleSearch() {
     displayItems(searchQuery);
-    console.log(123);
   }
 
   return (
     <div className="wrapper">
-      <div className="search">
-        <input
-          className="input"
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button className="button" onClick={handleSearch}>
-          Search
-        </button>
-      </div>
+      <Search
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleSearch={handleSearch}
+      />
       <Card items={items} />
     </div>
   );
