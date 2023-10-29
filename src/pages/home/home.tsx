@@ -1,27 +1,31 @@
 import { Component } from 'react';
-import { getAnime } from './api/get-anime';
-import Search from './components/search';
-import Card from './components/card';
-import { Item } from './entities/item';
-import { ItemResponse } from './entities/item-response';
+import { getAnime } from '../../api/get-anime';
+import Search from '../../components/search';
+import Card from '../../components/card';
+import { Item } from '../../entities/item';
+import { ItemResponse } from '../../entities/item-response';
+import styles from './home.module.css';
 
-interface AppState {
+interface HomeState {
   items: Item[];
   searchQuery: string;
+  error: boolean;
 }
 
-class App extends Component<{}, AppState> {
-  constructor(props: {}) {
+class Home extends Component<object, HomeState> {
+  constructor(props: object) {
     super(props);
 
     this.state = {
       items: [],
       searchQuery: localStorage.getItem('Searched anime') || '',
+      error: false,
     };
   }
 
-  // const [items, setItems] = useState<Item[]>([]);
-  // const [searchQuery, setSearchQuery] = useState('');
+  throwError = () => {
+    this.setState({ error: true });
+  };
 
   displayItems = async (searchedAnime: string = '') => {
     const itemResponses = (await getAnime(searchedAnime)) as unknown as {
@@ -41,17 +45,9 @@ class App extends Component<{}, AppState> {
     synopsis: payload.synopsis,
   });
 
-  // useEffect(() => {
-  //   displayItems();
-  // }, []);
-
   handleSearch = () => {
     this.displayItems(this.state.searchQuery);
     localStorage.setItem('Searched anime', this.state.searchQuery);
-
-    // const searchedAnime = localStorage.getItem('Searched anime');
-
-    // this.setState({ searchQuery: searchedAnime != null ? searchedAnime : '' });
   };
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,17 +67,25 @@ class App extends Component<{}, AppState> {
   }
 
   render() {
+    if (this.state.error) {
+      throw new Error('Test error!');
+    }
     return (
-      <div className="wrapper">
-        <Search
-          searchQuery={this.state.searchQuery}
-          setSearchQuery={(searchQuery) => this.setState({ searchQuery })}
-          handleSearch={this.handleSearch}
-        />
-        <Card items={this.state.items} />
-      </div>
+      <>
+        <div className={styles.wrapper}>
+          <button className={styles.errorButton} onClick={this.throwError}>
+            Throw Error
+          </button>
+          <Search
+            searchQuery={this.state.searchQuery}
+            setSearchQuery={(searchQuery) => this.setState({ searchQuery })}
+            handleSearch={this.handleSearch}
+          />
+          <Card items={this.state.items} />
+        </div>
+      </>
     );
   }
 }
 
-export default App;
+export default Home;
