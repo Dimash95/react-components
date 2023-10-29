@@ -10,6 +10,7 @@ interface HomeState {
   items: Item[];
   searchQuery: string;
   error: boolean;
+  isLoading: boolean;
 }
 
 class Home extends Component<object, HomeState> {
@@ -20,6 +21,7 @@ class Home extends Component<object, HomeState> {
       items: [],
       searchQuery: localStorage.getItem('Searched anime') || '',
       error: false,
+      isLoading: true,
     };
   }
 
@@ -36,6 +38,7 @@ class Home extends Component<object, HomeState> {
         (itemResponse: ItemResponse) => this.mapItemResponseToItem(itemResponse)
       );
       this.setState({ items: fetchedItems });
+      this.setState({ isLoading: false });
     }
   };
 
@@ -81,7 +84,11 @@ class Home extends Component<object, HomeState> {
             setSearchQuery={(searchQuery) => this.setState({ searchQuery })}
             handleSearch={this.handleSearch}
           />
-          <Card items={this.state.items} />
+          {this.state.isLoading ? (
+            <div className={styles.loading}>Loading...</div>
+          ) : (
+            <Card items={this.state.items} />
+          )}
         </div>
       </>
     );
