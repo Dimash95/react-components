@@ -10,7 +10,7 @@ interface Item {
 interface Props {
   items: Item[];
 }
-let i;
+
 class Card extends Component<Props> {
   render() {
     const { items } = this.props;
