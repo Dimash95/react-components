@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { getAnime } from '../../api/get-anime';
 import Search from '../../components/search';
 import Card from '../../components/card';
@@ -6,93 +6,74 @@ import { Item } from '../../entities/item';
 import { ItemResponse } from '../../entities/item-response';
 import styles from './home.module.css';
 
-interface HomeState {
-  items: Item[];
-  searchQuery: string;
-  error: boolean;
-  isLoading: boolean;
-}
+function Home() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [searchQuery, setSearchQuery] = useState(
+    localStorage.getItem('Searched anime') || ''
+  );
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-class Home extends Component<object, HomeState> {
-  constructor(props: object) {
-    super(props);
-
-    this.state = {
-      items: [],
-      searchQuery: localStorage.getItem('Searched anime') || '',
-      error: false,
-      isLoading: true,
-    };
-  }
-
-  throwError = () => {
-    this.setState({ error: true });
+  const throwError = () => {
+    setError(true);
   };
 
-  displayItems = async (searchedAnime: string = '') => {
+  const displayItems = async (searchedAnime: string = '') => {
     const itemResponses = (await getAnime(searchedAnime)) as unknown as {
       data: ItemResponse[];
     };
     if (itemResponses) {
       const fetchedItems = itemResponses.data.map(
-        (itemResponse: ItemResponse) => this.mapItemResponseToItem(itemResponse)
+        (itemResponse: ItemResponse) => mapItemResponseToItem(itemResponse)
       );
-      this.setState({ items: fetchedItems });
-      this.setState({ isLoading: false });
+      setItems(fetchedItems);
+      setIsLoading(false);
     }
   };
 
-  mapItemResponseToItem = (payload: ItemResponse): Item => ({
+  const mapItemResponseToItem = (payload: ItemResponse): Item => ({
     title: payload.title,
     image: payload.images.webp.image_url,
     synopsis: payload.synopsis,
   });
 
-  handleSearch = () => {
-    this.displayItems(this.state.searchQuery);
-    localStorage.setItem('Searched anime', this.state.searchQuery);
+  const handleSearch = () => {
+    displayItems(searchQuery);
+    localStorage.setItem('Searched anime', searchQuery);
   };
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    this.setState({ searchQuery: value });
-  };
-
-  componentDidMount() {
+  useEffect(() => {
     const searchedAnime = localStorage.getItem('Searched anime');
     if (searchedAnime) {
-      this.setState({ searchQuery: searchedAnime }, () => {
-        this.displayItems(searchedAnime);
-      });
+      setSearchQuery(searchedAnime);
+      displayItems(searchedAnime);
     } else {
-      this.displayItems();
+      displayItems();
     }
-  }
+  }, []);
 
-  render() {
-    if (this.state.error) {
-      throw new Error('Test error!');
-    }
-    return (
-      <>
-        <div className={styles.wrapper}>
-          <button className={styles.errorButton} onClick={this.throwError}>
-            Throw Error
-          </button>
-          <Search
-            searchQuery={this.state.searchQuery}
-            setSearchQuery={(searchQuery) => this.setState({ searchQuery })}
-            handleSearch={this.handleSearch}
-          />
-          {this.state.isLoading ? (
-            <div className={styles.loading}>Loading...</div>
-          ) : (
-            <Card items={this.state.items} />
-          )}
-        </div>
-      </>
-    );
+  if (error) {
+    throw new Error('Test error!');
   }
+  return (
+    <>
+      <div className={styles.wrapper}>
+        <button className={styles.errorButton} onClick={throwError}>
+          Throw Error
+        </button>
+        <Search
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearch}
+        />
+        {isLoading ? (
+          <div className={styles.loading}>Loading...</div>
+        ) : (
+          <Card items={items} />
+        )}
+      </div>
+    </>
+  );
 }
 
 export default Home;

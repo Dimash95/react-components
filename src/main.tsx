@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
 import ErrorBoundary from './components/error-boundary';
-import Home from './pages/home';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <Home />
+      <RouterProvider router={router} />
     </ErrorBoundary>
   </React.StrictMode>
 );
