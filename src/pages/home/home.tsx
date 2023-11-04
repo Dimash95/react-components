@@ -60,7 +60,7 @@ function Home() {
     } else {
       displayItems();
     }
-  }, [pageNumber]);
+  }, [pageNumber, perPage]);
 
   const setToNextPageNumber = (nextPageNumber: number) => {
     setPageNumber(nextPageNumber);
@@ -83,7 +83,6 @@ function Home() {
         <PaginationAndPerPage
           pageNumber={pageNumber}
           setToNextPageNumber={setToNextPageNumber}
-          perPage={perPage}
           setNewPerPage={setNewPerPage}
         />
         {isLoading ? (

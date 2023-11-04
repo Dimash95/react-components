@@ -8,8 +8,7 @@ interface Props {
 
 function Search({ searchQuery, setSearchQuery, handleSearch }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setSearchQuery(value);
+    setSearchQuery(event.target.value);
   };
 
   return (
