@@ -4,6 +4,7 @@ import Search from '../../components/search';
 import Card from '../../components/card';
 import { Item } from '../../entities/item';
 import { ItemResponse } from '../../entities/item-response';
+import PaginationAndPerPage from '../../components/pagination-and-per-page';
 import styles from './home.module.css';
 
 function Home() {
@@ -13,13 +14,22 @@ function Home() {
   );
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [perPage, setPerPage] = useState(10);
 
   const throwError = () => {
     setError(true);
   };
+  if (error) {
+    throw new Error('Test error!');
+  }
 
   const displayItems = async (searchedAnime: string = '') => {
-    const itemResponses = (await getAnime(searchedAnime)) as unknown as {
+    const itemResponses = (await getAnime(
+      searchedAnime,
+      pageNumber,
+      perPage
+    )) as unknown as {
       data: ItemResponse[];
     };
     if (itemResponses) {
@@ -50,11 +60,15 @@ function Home() {
     } else {
       displayItems();
     }
-  }, []);
+  }, [pageNumber]);
 
-  if (error) {
-    throw new Error('Test error!');
-  }
+  const setToNextPageNumber = (nextPageNumber: number) => {
+    setPageNumber(nextPageNumber);
+  };
+
+  const setNewPerPage = (newPerPage: number) => {
+    setPerPage(newPerPage);
+  };
   return (
     <>
       <div className={styles.wrapper}>
@@ -65,6 +79,12 @@ function Home() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           handleSearch={handleSearch}
+        />
+        <PaginationAndPerPage
+          pageNumber={pageNumber}
+          setToNextPageNumber={setToNextPageNumber}
+          perPage={perPage}
+          setNewPerPage={setNewPerPage}
         />
         {isLoading ? (
           <div className={styles.loading}>Loading...</div>
