@@ -80,10 +80,11 @@ function Home() {
 
   const [id, setId] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isModalLoading, setIsModalLoading] = useState(false);
   const navigate = useNavigate();
 
   const showAnimeById = async (id: number) => {
+    setIsModalLoading(true);
     setId(id);
     await setIsModalOpen(true);
     await displayAnimeById(id);
@@ -98,6 +99,7 @@ function Home() {
     };
     if (itemResponses) {
       setSelectedAnimeItem(mapItemResponseToItem(itemResponses.data));
+      setIsModalLoading(false);
     }
   };
 
@@ -107,6 +109,7 @@ function Home() {
     } else {
       await setIsModalOpen(true);
     }
+    setIsModalLoading(true);
   };
 
   useEffect(() => {
@@ -150,11 +153,15 @@ function Home() {
             <Card items={items} showAnimeById={showAnimeById} />
           )}
         </Link>
-        <ModalAnime
-          selectedAnimeItem={selectedAnimeItem}
-          isModalOpen={isModalOpen}
-          closeModal={closeModal}
-        />
+        {isModalLoading ? (
+          <div className={styles.modaLoading}>Loading...</div>
+        ) : (
+          <ModalAnime
+            selectedAnimeItem={selectedAnimeItem}
+            isModalOpen={isModalOpen}
+            closeModal={closeModal}
+          />
+        )}
       </div>
     </>
   );

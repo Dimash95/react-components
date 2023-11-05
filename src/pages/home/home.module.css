@@ -23,3 +23,10 @@
   margin-top: 150px;
   font-size: 32px;
 }
+
+.modaLoading {
+  position: fixed;
+  top: 300px;
+  right: 300px;
+  font-size: 40px;
+}
