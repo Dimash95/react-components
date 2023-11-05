@@ -1,8 +1,17 @@
 .wrapper {
   display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.content {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  margin: 0 auto;
+  color: black;
+  text-decoration: none;
+  width: 50%;
 }
 
 .errorButton {
