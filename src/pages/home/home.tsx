@@ -8,7 +8,8 @@ import { ItemResponse } from '../../entities/item-response';
 import PaginationAndPerPage from '../../components/pagination-and-per-page';
 import styles from './home.module.css';
 import ModalAnime from '../../components/modal';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [items, setItems] = useState<Item[]>([]);
@@ -77,13 +78,16 @@ function Home() {
 
   ////////////// * MODAL
 
-  const [id, setId] = useState(1);
+  const [id, setId] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showAnimeById = (id: number) => {
+  const navigate = useNavigate();
+
+  const showAnimeById = async (id: number) => {
     setId(id);
-    displayAnimeById(id);
-    setIsModalOpen(true);
+    await setIsModalOpen(true);
+    await displayAnimeById(id);
+    navigate(`/${id}`);
   };
 
   const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
@@ -93,23 +97,23 @@ function Home() {
       data: ItemResponse;
     };
     if (itemResponses) {
-      console.log(itemResponses.data);
-
       setSelectedAnimeItem(mapItemResponseToItem(itemResponses.data));
     }
   };
 
-  const closeModal = () => {
+  const closeModal = async () => {
     if (isModalOpen) {
-      setIsModalOpen(false);
+      await setIsModalOpen(false);
     } else {
-      setIsModalOpen(true);
+      await setIsModalOpen(true);
     }
   };
 
   useEffect(() => {
-    displayAnimeById(id);
-  }, []);
+    if (id && isModalOpen) {
+      displayAnimeById(id);
+    }
+  }, [id, isModalOpen]);
 
   return (
     <>
@@ -120,7 +124,7 @@ function Home() {
         }}
       >
         <Link
-          to={`/${id}`}
+          to={isModalOpen ? `/` : `/${id}`}
           className={styles.content}
           style={{
             opacity: isModalOpen ? '0.4' : '1',
