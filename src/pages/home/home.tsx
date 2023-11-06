@@ -8,7 +8,6 @@ import { ItemResponse } from '../../entities/item-response';
 import PaginationAndPerPage from '../../components/pagination-and-per-page';
 import styles from './home.module.css';
 import ModalAnime from '../../components/modal';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
@@ -143,7 +142,6 @@ function Home() {
             setNewPerPage={setNewPerPage}
           />
           <div
-            // to={`/${id}`}
             className={styles.content}
             style={{
               opacity: isModalOpen ? '0.4' : '1',
