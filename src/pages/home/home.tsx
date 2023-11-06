@@ -20,10 +20,17 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [urlPageNumber, setUrlPageNumber] = useState(`?page=${pageNumber}`);
+  const [id, setId] = useState<number>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalLoading, setIsModalLoading] = useState(false);
+  const navigate = useNavigate();
+  const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
 
   const throwError = () => {
     setError(true);
   };
+
   if (error) {
     throw new Error('Test error!');
   }
@@ -58,8 +65,6 @@ function Home() {
     localStorage.setItem('Searched anime', searchQuery);
   };
 
-  const [urlPageNumber, setUrlPageNumber] = useState(`?page=${pageNumber}`);
-
   useEffect(() => {
     const searchedAnime = localStorage.getItem('Searched anime');
     if (searchedAnime) {
@@ -80,20 +85,12 @@ function Home() {
     setPerPage(newPerPage);
   };
 
-  ////////////// * MODAL
-
-  const [id, setId] = useState<number>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalLoading, setIsModalLoading] = useState(false);
-  const navigate = useNavigate();
-  const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
-
   const showAnimeById = async (id: number) => {
     setIsModalLoading(true);
     setId(id);
     await setIsModalOpen(true);
     await displayAnimeById(id);
-    navigate(`/${id}`);
+    navigate(`/${urlPageNumber}/${id}`);
   };
 
   const displayAnimeById = async (id: number) => {
@@ -106,20 +103,22 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+    if (id && isModalOpen) {
+      displayAnimeById(id);
+      navigate(`/${urlPageNumber}/${id}`);
+    }
+  }, [id, isModalOpen, urlPageNumber]);
+
   const closeModal = async () => {
     if (isModalOpen) {
       await setIsModalOpen(false);
     } else {
       await setIsModalOpen(true);
     }
-    setIsModalLoading(true);
+    setIsModalLoading(false);
+    navigate(`/${urlPageNumber}`);
   };
-
-  useEffect(() => {
-    if (id && isModalOpen) {
-      displayAnimeById(id);
-    }
-  }, [id, isModalOpen]);
 
   return (
     <>
@@ -143,8 +142,8 @@ function Home() {
             setToNextPageNumber={setToNextPageNumber}
             setNewPerPage={setNewPerPage}
           />
-          <Link
-            to={`/${id}`}
+          <div
+            // to={`/${id}`}
             className={styles.content}
             style={{
               opacity: isModalOpen ? '0.4' : '1',
@@ -156,7 +155,7 @@ function Home() {
             ) : (
               <Card items={items} showAnimeById={showAnimeById} />
             )}
-          </Link>
+          </div>
         </div>
         {isModalLoading ? (
           <div className={styles.modaLoading}>Loading...</div>
