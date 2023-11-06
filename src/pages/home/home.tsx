@@ -126,14 +126,7 @@ function Home() {
           width: isModalOpen ? '50%' : '100%',
         }}
       >
-        <Link
-          to={isModalOpen ? `/` : `/${id}`}
-          className={styles.content}
-          style={{
-            opacity: isModalOpen ? '0.4' : '1',
-          }}
-          onClick={closeModal}
-        >
+        <div className={styles.content}>
           <button className={styles.errorButton} onClick={throwError}>
             Throw Error
           </button>
@@ -147,12 +140,21 @@ function Home() {
             setToNextPageNumber={setToNextPageNumber}
             setNewPerPage={setNewPerPage}
           />
-          {isLoading ? (
-            <div className={styles.loading}>Loading...</div>
-          ) : (
-            <Card items={items} showAnimeById={showAnimeById} />
-          )}
-        </Link>
+          <Link
+            to={isModalOpen ? `/` : `/${id}`}
+            className={styles.content}
+            style={{
+              opacity: isModalOpen ? '0.4' : '1',
+            }}
+            onClick={closeModal}
+          >
+            {isLoading ? (
+              <div className={styles.loading}>Loading...</div>
+            ) : (
+              <Card items={items} showAnimeById={showAnimeById} />
+            )}
+          </Link>
+        </div>
         {isModalLoading ? (
           <div className={styles.modaLoading}>Loading...</div>
         ) : (

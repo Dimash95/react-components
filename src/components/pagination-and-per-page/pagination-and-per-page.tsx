@@ -27,6 +27,7 @@ function PaginationAndPerPage({
 
   const updatePerPage = () => {
     setNewPerPage(perPageValue);
+    setToNextPageNumber(1);
   };
 
   return (
