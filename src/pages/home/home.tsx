@@ -58,6 +58,8 @@ function Home() {
     localStorage.setItem('Searched anime', searchQuery);
   };
 
+  const [urlPageNumber, setUrlPageNumber] = useState(`?page=${pageNumber}`);
+
   useEffect(() => {
     const searchedAnime = localStorage.getItem('Searched anime');
     if (searchedAnime) {
@@ -66,10 +68,12 @@ function Home() {
     } else {
       displayItems();
     }
-  }, [pageNumber, perPage]);
+    navigate(`/${urlPageNumber}`);
+  }, [pageNumber, perPage, urlPageNumber]);
 
   const setToNextPageNumber = (nextPageNumber: number) => {
     setPageNumber(nextPageNumber);
+    setUrlPageNumber(`?page=${nextPageNumber}`);
   };
 
   const setNewPerPage = (newPerPage: number) => {
