@@ -82,6 +82,7 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
   const navigate = useNavigate();
+  const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
 
   const showAnimeById = async (id: number) => {
     setIsModalLoading(true);
@@ -90,8 +91,6 @@ function Home() {
     await displayAnimeById(id);
     navigate(`/${id}`);
   };
-
-  const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
 
   const displayAnimeById = async (id: number) => {
     const itemResponses = (await getAnimeById(id)) as unknown as {
@@ -141,7 +140,7 @@ function Home() {
             setNewPerPage={setNewPerPage}
           />
           <Link
-            to={isModalOpen ? `/` : `/${id}`}
+            to={`/${id}`}
             className={styles.content}
             style={{
               opacity: isModalOpen ? '0.4' : '1',
