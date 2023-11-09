@@ -9,12 +9,9 @@ import PaginationAndPerPage from '../../components/pagination-and-per-page';
 import styles from './home.module.css';
 import ModalAnime from '../../components/modal';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../../context/context-anime-items';
 
 function Home() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [searchQuery, setSearchQuery] = useState(
-    localStorage.getItem('Searched anime') || ''
-  );
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -25,6 +22,11 @@ function Home() {
   const [isModalLoading, setIsModalLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
+
+  const [searchedInputValue, setSearchedInputValue] = useState(
+    localStorage.getItem('Searched anime') || ''
+  );
+  const [searchedAnimeItems, setSearchedAnimeItems] = useState<Item[]>([]);
 
   const throwError = () => {
     setError(true);
@@ -46,7 +48,7 @@ function Home() {
       const fetchedItems = itemResponses.data.map(
         (itemResponse: ItemResponse) => mapItemResponseToItem(itemResponse)
       );
-      setItems(fetchedItems);
+      setSearchedAnimeItems(fetchedItems);
       setIsLoading(false);
     }
   };
@@ -60,14 +62,14 @@ function Home() {
   });
 
   const handleSearch = () => {
-    displayItems(searchQuery);
-    localStorage.setItem('Searched anime', searchQuery);
+    displayItems(searchedInputValue);
+    localStorage.setItem('Searched anime', searchedInputValue);
   };
 
   useEffect(() => {
     const searchedAnime = localStorage.getItem('Searched anime');
     if (searchedAnime) {
-      setSearchQuery(searchedAnime);
+      setSearchedInputValue(searchedAnime);
       displayItems(searchedAnime);
     } else {
       displayItems();
@@ -120,7 +122,14 @@ function Home() {
   };
 
   return (
-    <>
+    <Context.Provider
+      value={{
+        searchedInputValue,
+        setSearchedInputValue,
+        searchedAnimeItems,
+        setSearchedAnimeItems,
+      }}
+    >
       <div
         className={styles.wrapper}
         style={{
@@ -131,11 +140,7 @@ function Home() {
           <button className={styles.errorButton} onClick={throwError}>
             Throw Error
           </button>
-          <Search
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            handleSearch={handleSearch}
-          />
+          <Search handleSearch={handleSearch} />
           <PaginationAndPerPage
             pageNumber={pageNumber}
             setToNextPageNumber={setToNextPageNumber}
@@ -151,7 +156,7 @@ function Home() {
             {isLoading ? (
               <div className={styles.loading}>Loading...</div>
             ) : (
-              <Card items={items} showAnimeById={showAnimeById} />
+              <Card showAnimeById={showAnimeById} />
             )}
           </div>
         </div>
@@ -165,7 +170,7 @@ function Home() {
           />
         )}
       </div>
-    </>
+    </Context.Provider>
   );
 }
 
