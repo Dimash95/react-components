@@ -12,13 +12,7 @@
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "husky": {
-      "hooks": {
-        "pre-commit": "npm test",
-        "pre-push": "npm run test:coverage"
-      }
-    }
+    "coverage": "vitest run --coverage"
   },
   "lint-staged": {
     "*.ts": "prettier --write",
