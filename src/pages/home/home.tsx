@@ -137,7 +137,11 @@ function Home() {
         }}
       >
         <div className={styles.content}>
-          <button className={styles.errorButton} onClick={throwError}>
+          <button
+            className={styles.errorButton}
+            onClick={throwError}
+            data-testid="error"
+          >
             Throw Error
           </button>
           <Search handleSearch={handleSearch} />
@@ -152,21 +156,25 @@ function Home() {
               opacity: isModalOpen ? '0.4' : '1',
             }}
             onClick={closeModal}
+            data-testid="close-modal"
           >
             {isLoading ? (
               <div className={styles.loading}>Loading...</div>
             ) : (
-              <Card showAnimeById={showAnimeById} />
+              <Card showAnimeById={showAnimeById} data-testid="anime-card" />
             )}
           </div>
         </div>
         {isModalLoading ? (
-          <div className={styles.modaLoading}>Loading...</div>
+          <div className={styles.modaLoading} data-testid="modal-loading">
+            Loading...
+          </div>
         ) : (
           <ModalAnime
             selectedAnimeItem={selectedAnimeItem}
             isModalOpen={isModalOpen}
             closeModal={closeModal}
+            data-testid="modal"
           />
         )}
       </div>

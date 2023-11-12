@@ -8,17 +8,19 @@ interface ItemsContextType {
   setSearchedAnimeItems: (newItems: Item[]) => void;
 }
 
-const initialItemsContext: ItemsContextType = {
+export const initialItemsContext: ItemsContextType = {
   searchedInputValue: '',
   setSearchedInputValue: (newInputValue: string) => {
     if (typeof newInputValue === 'string' && newInputValue.length > 0) {
       localStorage.setItem('Searched anime', newInputValue);
+      initialItemsContext.searchedInputValue = newInputValue;
     }
   },
   searchedAnimeItems: [],
   setSearchedAnimeItems: (newItems: Item[]) => {
     if (Array.isArray(newItems)) {
       localStorage.setItem('Searched anime', '');
+      initialItemsContext.searchedAnimeItems = newItems;
     }
   },
 };

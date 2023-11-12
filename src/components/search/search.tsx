@@ -20,8 +20,13 @@ function Search({ handleSearch }: Props) {
         type="text"
         value={searchedInputValue}
         onChange={handleChange}
+        data-testid="search-input"
       />
-      <button className={styles.button} onClick={handleSearch}>
+      <button
+        className={styles.button}
+        onClick={handleSearch}
+        data-testid="search"
+      >
         Search
       </button>
     </div>

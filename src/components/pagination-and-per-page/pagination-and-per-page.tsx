@@ -33,7 +33,10 @@ function PaginationAndPerPage({
   return (
     <div className={styles.wrapper}>
       <div className={styles.paginationWrapper}>
-        <button onClick={() => changeToNextPageNumber(pageNumber - 1)}>
+        <button
+          onClick={() => changeToNextPageNumber(pageNumber - 1)}
+          data-testid="page-number"
+        >
           Previous
         </button>
         <p className={styles.page}>{pageNumber}</p>
@@ -48,8 +51,11 @@ function PaginationAndPerPage({
           type="text"
           value={perPageValue}
           onChange={onChangePerPage}
+          data-testid="per-page-value"
         />
-        <button onClick={updatePerPage}>Update page size</button>
+        <button onClick={updatePerPage} data-testid="pagination-per-page">
+          Update page size
+        </button>
       </div>
     </div>
   );
