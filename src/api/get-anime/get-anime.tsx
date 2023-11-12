@@ -9,4 +9,5 @@ export const getAnime = async (
     `https://api.jikan.moe/v4/anime?page=${pageNumber}&sfw&limit=${perPage}&q=${searchedAnime}`
   );
   return response.data;
+  //asdsa
 };
