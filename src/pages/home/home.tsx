@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getAnime } from '../../api/get-anime';
-import { getAnimeById } from '../../api/get-anime-by-id';
+import { getAnime } from '../../api/get-anime/get-anime';
+import { getAnimeById } from '../../api/get-anime-by-id/get-anime-by-id';
 import Search from '../../components/search';
 import Card from '../../components/card';
 import { Item } from '../../entities/item';
