@@ -1,6 +1,4 @@
-import { useContext } from 'react';
 import styles from './card.module.css';
-import { Context } from '../../context/context-anime-items';
 
 interface Item {
   title: string;
@@ -11,12 +9,11 @@ interface Item {
 }
 
 interface Props {
+  searchedAnimeItems?: Item[];
   showAnimeById(id: number): void;
 }
 
-function Card({ showAnimeById }: Props) {
-  const { searchedAnimeItems } = useContext(Context);
-
+function Card({ searchedAnimeItems, showAnimeById }: Props) {
   return (
     <div className={styles.wrapper}>
       {searchedAnimeItems?.map((item: Item) => (

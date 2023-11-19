@@ -20,13 +20,23 @@
 }
 
 .loading {
-  margin-top: 150px;
-  font-size: 32px;
+  font-size: 40px;
+  text-align: center;
+  margin-top: 200px;
+  color: green;
 }
 
-.modaLoading {
+.error {
+  font-size: 40px;
+  text-align: center;
+  margin-top: 200px;
+  color: red;
+}
+
+.modalLoading {
   position: fixed;
   top: 300px;
   right: 300px;
   font-size: 40px;
+  color: green;
 }

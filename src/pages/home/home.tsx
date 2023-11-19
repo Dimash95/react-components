@@ -1,57 +1,53 @@
 import { useState, useEffect } from 'react';
-import { getAnime } from '../../api/get-anime/get-anime';
-import { getAnimeById } from '../../api/get-anime-by-id/get-anime-by-id';
+import { useNavigate } from 'react-router-dom';
 import Search from '../../components/search';
 import Card from '../../components/card';
+import PaginationAndPerPage from '../../components/pagination-and-per-page';
+import ModalAnime from '../../components/modal';
 import { Item } from '../../entities/item';
 import { ItemResponse } from '../../entities/item-response';
-import PaginationAndPerPage from '../../components/pagination-and-per-page';
+import { useAppSelector } from '../../store';
+import { useGetAnimeQuery } from '../../services/anime-api';
 import styles from './home.module.css';
-import ModalAnime from '../../components/modal';
-import { useNavigate } from 'react-router-dom';
-import { Context } from '../../context/context-anime-items';
-import { setSearchValue, useAppDispatch, useAppSelector } from '../../store';
+import { useGetAnimeByIdQuery } from '../../services/detailed-anime-api';
 
 function Home() {
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [urlPageNumber, setUrlPageNumber] = useState(`?page=${pageNumber}`);
   const [id, setId] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalLoading, setIsModalLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
-  const [searchedAnimeItems, setSearchedAnimeItems] = useState<Item[]>([]);
 
   const searchValue = useAppSelector((state) => state.searchValue);
   const itemsPerPage = useAppSelector((state) => state.itemsPerPage);
-  const dispatch = useAppDispatch();
+  const [forceError, setForceError] = useState(false);
+  const [anime, setAnime] = useState<Item[]>();
+  const { data, error, isLoading } = useGetAnimeQuery({
+    pageNumber,
+    itemsPerPage,
+    searchValue,
+    refetchOnMountOrArgChange: true,
+    forceError: forceError,
+  });
+
+  const {
+    data: detailedData,
+    error: detailedError,
+    isLoading: detailedIsLoading,
+  } = useGetAnimeByIdQuery({
+    id,
+    refetchOnMountOrArgChange: true,
+    forceError: forceError,
+  });
 
   const throwError = () => {
-    setError(true);
+    setForceError(true);
   };
 
   if (error) {
     throw new Error('Test error!');
   }
-
-  const displayItems = async (searchedAnime: string = '') => {
-    const itemResponses = (await getAnime(
-      searchedAnime,
-      pageNumber,
-      itemsPerPage
-    )) as unknown as {
-      data: ItemResponse[];
-    };
-    if (itemResponses) {
-      const fetchedItems = itemResponses.data.map(
-        (itemResponse: ItemResponse) => mapItemResponseToItem(itemResponse)
-      );
-      setSearchedAnimeItems(fetchedItems);
-      setIsLoading(false);
-    }
-  };
 
   const mapItemResponseToItem = (payload: ItemResponse): Item => ({
     title: payload.title,
@@ -61,21 +57,24 @@ function Home() {
     id: payload.mal_id,
   });
 
-  const handleSearch = () => {
-    displayItems(searchValue);
-    localStorage.setItem('Searched anime', searchValue);
-  };
+  useEffect(() => {
+    if (data) {
+      const fetchedAnimeItems = data.data.map((itemResponse: ItemResponse) =>
+        mapItemResponseToItem(itemResponse)
+      );
+      setAnime(fetchedAnimeItems);
+    }
+  }, [data]);
 
   useEffect(() => {
-    const searchedAnime = localStorage.getItem('Searched anime');
-    if (searchedAnime) {
-      dispatch(setSearchValue(searchedAnime));
-      displayItems(searchedAnime);
-    } else {
-      displayItems();
+    if (detailedData) {
+      setSelectedAnimeItem(mapItemResponseToItem(detailedData.data));
+
+      if (id) {
+        navigate(`/${urlPageNumber}/${id}`);
+      }
     }
-    navigate(`/${urlPageNumber}`);
-  }, [pageNumber, itemsPerPage, urlPageNumber]);
+  }, [detailedData]);
 
   const setToNextPageNumber = (nextPageNumber: number) => {
     setPageNumber(nextPageNumber);
@@ -83,29 +82,10 @@ function Home() {
   };
 
   const showAnimeById = async (id: number) => {
-    setIsModalLoading(true);
     setId(id);
     await setIsModalOpen(true);
-    await displayAnimeById(id);
     navigate(`/${urlPageNumber}/${id}`);
   };
-
-  const displayAnimeById = async (id: number) => {
-    const itemResponses = (await getAnimeById(id)) as unknown as {
-      data: ItemResponse;
-    };
-    if (itemResponses) {
-      setSelectedAnimeItem(mapItemResponseToItem(itemResponses.data));
-      setIsModalLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (id && isModalOpen) {
-      displayAnimeById(id);
-      navigate(`/${urlPageNumber}/${id}`);
-    }
-  }, [id, isModalOpen, urlPageNumber]);
 
   const closeModal = async () => {
     if (isModalOpen) {
@@ -113,65 +93,68 @@ function Home() {
     } else {
       await setIsModalOpen(true);
     }
-    setIsModalLoading(false);
     navigate(`/${urlPageNumber}`);
   };
 
   return (
-    <Context.Provider
-      value={{
-        searchedAnimeItems,
-        setSearchedAnimeItems,
-      }}
-    >
-      <div
-        className={styles.wrapper}
-        style={{
-          width: isModalOpen ? '50%' : '100%',
-        }}
-      >
-        <div className={styles.content}>
-          <button
-            className={styles.errorButton}
-            onClick={throwError}
-            data-testid="error"
-          >
-            Throw Error
-          </button>
-          <Search handleSearch={handleSearch} />
-          <PaginationAndPerPage
-            pageNumber={pageNumber}
-            setToNextPageNumber={setToNextPageNumber}
-          />
-          <div
-            className={styles.content}
-            style={{
-              opacity: isModalOpen ? '0.4' : '1',
-            }}
-            onClick={closeModal}
-            data-testid="close-modal"
-          >
-            {isLoading ? (
-              <div className={styles.loading}>Loading...</div>
-            ) : (
-              <Card showAnimeById={showAnimeById} data-testid="anime-card" />
-            )}
+    <>
+      {isLoading && <h1 className={styles.loading}>Loading...</h1>}
+      {forceError && <h1 className={styles.error}>Error</h1>}
+      {!forceError && data && (
+        <div
+          className={styles.wrapper}
+          style={{
+            width: isModalOpen ? '50%' : '100%',
+          }}
+        >
+          <div className={styles.content}>
+            <button
+              className={styles.errorButton}
+              onClick={throwError}
+              data-testid="error"
+            >
+              Throw Error
+            </button>
+            <Search />
+            <PaginationAndPerPage
+              pageNumber={pageNumber}
+              setToNextPageNumber={setToNextPageNumber}
+            />
+            <div
+              className={styles.content}
+              style={{
+                opacity: isModalOpen ? '0.4' : '1',
+              }}
+              onClick={closeModal}
+              data-testid="close-modal"
+            >
+              {isLoading ? (
+                <div className={styles.loading}>Loading...</div>
+              ) : (
+                <Card
+                  searchedAnimeItems={anime}
+                  showAnimeById={showAnimeById}
+                  data-testid="anime-card"
+                />
+              )}
+            </div>
           </div>
+          {detailedError && <h1 className={styles.modalError}>Error</h1>}
+          {detailedIsLoading ? (
+            <h1 className={styles.modalLoading} data-testid="modal-loading">
+              Loading...
+            </h1>
+          ) : (
+            <ModalAnime
+              selectedAnimeItem={selectedAnimeItem}
+              isModalOpen={isModalOpen}
+              closeModal={closeModal}
+              data-testid="modal"
+            />
+          )}
         </div>
-        {isModalLoading ? (
-          <div className={styles.modaLoading} data-testid="modal-loading">
-            Loading...
-          </div>
-        ) : (
-          <ModalAnime
-            selectedAnimeItem={selectedAnimeItem}
-            isModalOpen={isModalOpen}
-            closeModal={closeModal}
-            data-testid="modal"
-          />
-        )}
-      </div>
-    </Context.Provider>
+      )}
+    </>
   );
 }
 

@@ -1,21 +1,19 @@
 import styles from './search.module.css';
-import { setSearchValue, useAppDispatch, useAppSelector } from '../../store';
+import { setSearchValue, useAppDispatch } from '../../store';
+import { useState } from 'react';
 
-interface Props {
-  handleSearch: () => void;
-}
-
-function Search({ handleSearch }: Props) {
+function Search() {
   const dispatch = useAppDispatch();
-  const searchValue = useAppSelector((state) => state.searchValue);
-
+  const [currentSearchValue, setCurrentSearchValue] = useState(
+    localStorage.getItem('Searched anime') || ''
+  );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchValue(event.target.value));
+    setCurrentSearchValue(event.target.value);
   };
 
   const onButtonClick = () => {
-    dispatch(setSearchValue(searchValue));
-    handleSearch();
+    dispatch(setSearchValue(currentSearchValue));
+    localStorage.setItem('Searched anime', currentSearchValue);
   };
 
   return (
@@ -23,7 +21,7 @@ function Search({ handleSearch }: Props) {
       <input
         className={styles.input}
         type="text"
-        value={searchValue}
+        value={currentSearchValue}
         onChange={handleChange}
         data-testid="search-input"
       />

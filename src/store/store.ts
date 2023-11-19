@@ -1,15 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { searchValueSlice } from './slices/search-value-slice';
 import { itemsPerPageSlice } from './slices/items-per-page-slice';
+import { animeApi } from '../services/anime-api';
+import { detailAnimeApi } from '../services/detailed-anime-api';
 
 export const store = configureStore({
   reducer: {
     searchValue: searchValueSlice.reducer,
     itemsPerPage: itemsPerPageSlice.reducer,
+    [animeApi.reducerPath]: animeApi.reducer,
+    [detailAnimeApi.reducerPath]: detailAnimeApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      animeApi.middleware,
+      detailAnimeApi.middleware
+    ),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
 export type AppDispatch = typeof store.dispatch;
