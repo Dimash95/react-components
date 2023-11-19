@@ -16,7 +16,6 @@ function Home() {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [urlPageNumber, setUrlPageNumber] = useState(`?page=${pageNumber}`);
   const [id, setId] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +25,7 @@ function Home() {
   const [searchedAnimeItems, setSearchedAnimeItems] = useState<Item[]>([]);
 
   const searchValue = useAppSelector((state) => state.searchValue);
+  const itemsPerPage = useAppSelector((state) => state.itemsPerPage);
   const dispatch = useAppDispatch();
 
   const throwError = () => {
@@ -40,7 +40,7 @@ function Home() {
     const itemResponses = (await getAnime(
       searchedAnime,
       pageNumber,
-      perPage
+      itemsPerPage
     )) as unknown as {
       data: ItemResponse[];
     };
@@ -75,15 +75,11 @@ function Home() {
       displayItems();
     }
     navigate(`/${urlPageNumber}`);
-  }, [pageNumber, perPage, urlPageNumber]);
+  }, [pageNumber, itemsPerPage, urlPageNumber]);
 
   const setToNextPageNumber = (nextPageNumber: number) => {
     setPageNumber(nextPageNumber);
     setUrlPageNumber(`?page=${nextPageNumber}`);
-  };
-
-  const setNewPerPage = (newPerPage: number) => {
-    setPerPage(newPerPage);
   };
 
   const showAnimeById = async (id: number) => {
@@ -146,7 +142,6 @@ function Home() {
           <PaginationAndPerPage
             pageNumber={pageNumber}
             setToNextPageNumber={setToNextPageNumber}
-            setNewPerPage={setNewPerPage}
           />
           <div
             className={styles.content}

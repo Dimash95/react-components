@@ -1,22 +1,20 @@
 import { ChangeEvent, useState } from 'react';
 import styles from './pagination-and-per-page.module.css';
+import { setItemsPerPage } from '../../store';
+import { useDispatch } from 'react-redux';
 
 interface Props {
   pageNumber: number;
   setToNextPageNumber: (nextPageNumber: number) => void;
-  setNewPerPage: (newPerPage: number) => void;
 }
 
-function PaginationAndPerPage({
-  pageNumber,
-  setToNextPageNumber,
-  setNewPerPage,
-}: Props) {
+function PaginationAndPerPage({ pageNumber, setToNextPageNumber }: Props) {
   const changeToNextPageNumber = (nextPageNumber: number) => {
     if (nextPageNumber < 1) return;
     setToNextPageNumber(nextPageNumber);
   };
   const [perPageValue, setPerPageValue] = useState(10);
+  const dispatch = useDispatch();
 
   const onChangePerPage = (event: ChangeEvent<HTMLInputElement>) => {
     if (isNaN(+event.target.value)) {
@@ -26,7 +24,7 @@ function PaginationAndPerPage({
   };
 
   const updatePerPage = () => {
-    setNewPerPage(perPageValue);
+    dispatch(setItemsPerPage(perPageValue));
     setToNextPageNumber(1);
   };
 

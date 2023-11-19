@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { searchValueSlice } from './slices/search-value-slice';
+import { itemsPerPageSlice } from './slices/items-per-page-slice';
 
 export const store = configureStore({
   reducer: {
     searchValue: searchValueSlice.reducer,
+    itemsPerPage: itemsPerPageSlice.reducer,
   },
 });
 
