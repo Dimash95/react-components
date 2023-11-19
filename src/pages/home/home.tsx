@@ -10,6 +10,7 @@ import styles from './home.module.css';
 import ModalAnime from '../../components/modal';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../context/context-anime-items';
+import { setSearchValue, useAppDispatch, useAppSelector } from '../../store';
 
 function Home() {
   const [error, setError] = useState(false);
@@ -22,11 +23,10 @@ function Home() {
   const [isModalLoading, setIsModalLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedAnimeItem, setSelectedAnimeItem] = useState<Item>();
-
-  const [searchedInputValue, setSearchedInputValue] = useState(
-    localStorage.getItem('Searched anime') || ''
-  );
   const [searchedAnimeItems, setSearchedAnimeItems] = useState<Item[]>([]);
+
+  const searchValue = useAppSelector((state) => state.searchValue);
+  const dispatch = useAppDispatch();
 
   const throwError = () => {
     setError(true);
@@ -62,14 +62,14 @@ function Home() {
   });
 
   const handleSearch = () => {
-    displayItems(searchedInputValue);
-    localStorage.setItem('Searched anime', searchedInputValue);
+    displayItems(searchValue);
+    localStorage.setItem('Searched anime', searchValue);
   };
 
   useEffect(() => {
     const searchedAnime = localStorage.getItem('Searched anime');
     if (searchedAnime) {
-      setSearchedInputValue(searchedAnime);
+      dispatch(setSearchValue(searchedAnime));
       displayItems(searchedAnime);
     } else {
       displayItems();
@@ -124,8 +124,6 @@ function Home() {
   return (
     <Context.Provider
       value={{
-        searchedInputValue,
-        setSearchedInputValue,
         searchedAnimeItems,
         setSearchedAnimeItems,
       }}

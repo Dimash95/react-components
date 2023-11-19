@@ -1,16 +1,21 @@
-import { useContext } from 'react';
 import styles from './search.module.css';
-import { Context } from '../../context/context-anime-items';
+import { setSearchValue, useAppDispatch, useAppSelector } from '../../store';
 
 interface Props {
   handleSearch: () => void;
 }
 
 function Search({ handleSearch }: Props) {
-  const { searchedInputValue, setSearchedInputValue } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const searchValue = useAppSelector((state) => state.searchValue);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchedInputValue(event.target.value);
+    dispatch(setSearchValue(event.target.value));
+  };
+
+  const onButtonClick = () => {
+    dispatch(setSearchValue(searchValue));
+    handleSearch();
   };
 
   return (
@@ -18,13 +23,13 @@ function Search({ handleSearch }: Props) {
       <input
         className={styles.input}
         type="text"
-        value={searchedInputValue}
+        value={searchValue}
         onChange={handleChange}
         data-testid="search-input"
       />
       <button
         className={styles.button}
-        onClick={handleSearch}
+        onClick={onButtonClick}
         data-testid="search"
       >
         Search
