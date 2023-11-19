@@ -8,8 +8,8 @@ import { Item } from '../../entities/item';
 import { ItemResponse } from '../../entities/item-response';
 import { useAppSelector } from '../../store';
 import { useGetAnimeQuery } from '../../services/anime-api';
-import styles from './home.module.css';
 import { useGetAnimeByIdQuery } from '../../services/detailed-anime-api';
+import styles from './home.module.css';
 
 function Home() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -98,7 +98,11 @@ function Home() {
 
   return (
     <>
-      {isLoading && <h1 className={styles.loading}>Loading...</h1>}
+      {isLoading && (
+        <h1 className={styles.loading} data-testid="error">
+          Loading...
+        </h1>
+      )}
       {forceError && <h1 className={styles.error}>Error</h1>}
       {!forceError && data && (
         <div
@@ -149,7 +153,7 @@ function Home() {
               selectedAnimeItem={selectedAnimeItem}
               isModalOpen={isModalOpen}
               closeModal={closeModal}
-              data-testid="modal"
+              data-testid="close-modal"
             />
           )}
         </div>
