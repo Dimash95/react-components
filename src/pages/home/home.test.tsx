@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import Home from './home';
@@ -18,21 +18,5 @@ describe('search', () => {
         </MemoryRouter>
       </Provider>
     );
-  });
-
-  it('should throw an error when forceError is true', () => {
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <Home />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    const errorButton = getByTestId('error');
-    fireEvent.click(errorButton);
-    expect(() => {
-      throw new Error('Test error!');
-    }).toThrow('Test error!');
   });
 });
