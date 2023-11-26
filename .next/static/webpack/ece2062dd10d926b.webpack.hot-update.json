@@ -1,0 +1,29 @@
+{
+  "c": ["pages/_app", "webpack"],
+  "r": ["pages/index"],
+  "m": [
+    "./node_modules/react/cjs/react-jsx-dev-runtime.development.js",
+    "./node_modules/react/jsx-dev-runtime.js",
+    "./src/pages/_app.tsx",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[2]!./src/components/card/card.module.css",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[2]!./src/components/modal/modal.module.css",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[2]!./src/components/pagination-and-per-page/pagination-and-per-page.module.css",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[2]!./src/components/search/search.module.css",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[7].oneOf[8].use[2]!./src/pages/home.module.css",
+    "./node_modules/next/dist/build/webpack/loaders/css-loader/src/runtime/api.js",
+    "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2FUsers%2Fdimash%2FDesktop%2Frss%2Freact-components%2Fsrc%2Fpages%2Findex.tsx&page=%2F!",
+    "./node_modules/next/dist/build/webpack/loaders/next-style-loader/runtime/injectStylesIntoStyleTag.js",
+    "./node_modules/next/head.js",
+    "./node_modules/next/router.js",
+    "./src/components/card/card.module.css",
+    "./src/components/card/card.tsx",
+    "./src/components/modal/modal.module.css",
+    "./src/components/modal/modal.tsx",
+    "./src/components/pagination-and-per-page/pagination-and-per-page.module.css",
+    "./src/components/pagination-and-per-page/pagination-and-per-page.tsx",
+    "./src/components/search/search.module.css",
+    "./src/components/search/search.tsx",
+    "./src/pages/home.module.css",
+    "./src/pages/index.tsx"
+  ]
+}
