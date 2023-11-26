@@ -1,44 +1,49 @@
-import { ChangeEvent, useState } from 'react';
-import styles from './pagination-and-per-page.module.css';
-import { setItemsPerPage } from '../../store';
-import { useDispatch } from 'react-redux';
+import { ChangeEvent, use, useEffect, useState } from "react";
+import styles from "./pagination-and-per-page.module.css";
 
 interface Props {
-  pageNumber: number;
-  setToNextPageNumber: (nextPageNumber: number) => void;
+  pageNumber: string;
+  perPage: string;
+  setPaginationAndPageNumber: (pageNumber: string, perPage: string) => void;
 }
 
-function PaginationAndPerPage({ pageNumber, setToNextPageNumber }: Props) {
+function PaginationAndPerPage({
+  pageNumber,
+  perPage,
+  setPaginationAndPageNumber,
+}: Props) {
+  const [newPageNumber, setNewPageNumber] = useState(pageNumber);
+  const [newPerPage, setNewPerPage] = useState(perPage);
+
   const changeToNextPageNumber = (nextPageNumber: number) => {
     if (nextPageNumber < 1) return;
-    setToNextPageNumber(nextPageNumber);
+    setNewPageNumber(nextPageNumber.toString());
+    setPaginationAndPageNumber(nextPageNumber.toString(), newPerPage);
   };
-  const [perPageValue, setPerPageValue] = useState(10);
-  const dispatch = useDispatch();
 
   const onChangePerPage = (event: ChangeEvent<HTMLInputElement>) => {
     if (isNaN(+event.target.value)) {
       return;
     }
-    setPerPageValue(+event.target.value);
+    setNewPerPage(event.target.value);
   };
 
   const updatePerPage = () => {
-    dispatch(setItemsPerPage(perPageValue));
-    setToNextPageNumber(1);
+    setNewPageNumber("1");
+    setPaginationAndPageNumber("1", newPerPage);
   };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.paginationWrapper}>
         <button
-          onClick={() => changeToNextPageNumber(pageNumber - 1)}
+          onClick={() => changeToNextPageNumber(+newPageNumber - 1)}
           data-testid="page-number"
         >
           Previous
         </button>
-        <p className={styles.page}>{pageNumber}</p>
-        <button onClick={() => changeToNextPageNumber(pageNumber + 1)}>
+        <p className={styles.page}>{newPageNumber}</p>
+        <button onClick={() => changeToNextPageNumber(+newPageNumber + 1)}>
           Next
         </button>
       </div>
@@ -47,7 +52,7 @@ function PaginationAndPerPage({ pageNumber, setToNextPageNumber }: Props) {
         <input
           className={styles.perPage}
           type="text"
-          value={perPageValue}
+          value={newPerPage}
           onChange={onChangePerPage}
           data-testid="per-page-value"
         />

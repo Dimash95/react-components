@@ -1,39 +1,37 @@
-import styles from './card.module.css';
-
-interface Item {
-  title: string;
-  image: string;
-  largeImage: string;
-  synopsis: string;
-  id: number;
-}
+import React from "react";
+import styles from "./card.module.css";
+import { AnimeResponse } from "../../entities/anime-response";
 
 interface Props {
-  searchedAnimeItems?: Item[];
-  showAnimeById(id: number): void;
+  allAnime: AnimeResponse[];
+  showAnimeById: (id: number) => void;
 }
 
-function Card({ searchedAnimeItems, showAnimeById }: Props) {
+const Card = ({ allAnime, showAnimeById }: Props) => {
   return (
     <div className={styles.wrapper}>
-      {searchedAnimeItems?.map((item: Item) => (
+      {allAnime?.map((anime) => (
         <div
           className={styles.card}
-          key={item.title}
-          onClick={() => showAnimeById(item.id)}
+          key={anime.title}
+          onClick={() => showAnimeById(anime.mal_id)}
           data-testid="card-click"
         >
           <div className={styles.imageAndTitle}>
-            <img className={styles.image} src={item.image} alt="Image" />
+            <img
+              className={styles.image}
+              src={anime.images.webp.image_url}
+              alt="Image"
+            />
             <p className={styles.title} data-testid="card-title">
-              {item.title}
+              {anime.title}
             </p>
           </div>
-          <p className={styles.synopsis}>{item.synopsis}</p>
+          <p className={styles.synopsis}>{anime.synopsis}</p>
         </div>
       ))}
     </div>
   );
-}
+};
 
 export default Card;
