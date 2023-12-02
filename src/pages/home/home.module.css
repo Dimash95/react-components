@@ -1,42 +1,18 @@
 .wrapper {
   display: flex;
-  justify-content: space-around;
-  padding: 10px;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
   align-items: center;
-  margin: 0 auto;
-  color: black;
+  flex-wrap: wrap;
+  height: 100vh;
+}
+
+.form {
+  font-size: 32px;
+  color: #000;
   text-decoration: none;
-  width: 50%;
 }
 
-.errorButton {
-  height: 30px;
-  cursor: pointer;
-}
-
-.loading {
-  font-size: 40px;
-  text-align: center;
-  margin-top: 200px;
-  color: green;
-}
-
-.error {
-  font-size: 40px;
-  text-align: center;
-  margin-top: 200px;
-  color: red;
-}
-
-.modalLoading {
-  position: fixed;
-  top: 300px;
-  right: 300px;
-  font-size: 40px;
-  color: green;
+.form:hover {
+  text-decoration: underline;
 }

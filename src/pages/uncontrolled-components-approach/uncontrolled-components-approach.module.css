@@ -1,0 +1,82 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.title {
+  font-size: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.labelInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkboxWrapper {
+  display: flex;
+  gap: 10rem;
+  justify-content: space-around;
+  align-items: center;
+}
+
+input[type='text'] {
+  width: 15rem;
+  height: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+}
+
+.email {
+  width: 30rem;
+  height: 2rem;
+}
+
+.select {
+  width: 15rem;
+  height: 2rem;
+}
+
+button {
+  margin-top: 1rem;
+  width: 10rem;
+  height: 2rem;
+  border-radius: 1rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+button:hover {
+  border: 2px solid #ccc;
+}
+
+button:active {
+  background-color: #ccc;
+}
+
+button:disabled {
+  color: #ccc;
+}
