@@ -1,41 +1,71 @@
 import { useState, ChangeEvent } from 'react';
+import { setFormData, useAppDispatch } from '../../store';
+import { Form } from '../../types/form';
+import { FormFields } from '../../types/form-fields';
 import styles from './uncontrolled-components-approach.module.css';
+import { useAppSelector } from '../../store';
 
 export const UncontrolledComponentsApproach = () => {
-  const [topping, setTopping] = useState('Medium');
+  const dispatch = useAppDispatch();
+  const [gender, setGender] = useState('Medium');
   const [checkedOne, setCheckedOne] = useState(false);
   const [file, setFile] = useState('');
-
+  const formData = useAppSelector((state) => state.formData);
+  console.log(formData);
   const handleChangeOne = () => {
     setCheckedOne(!checkedOne);
   };
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.files);
     if (e.target.files && e.target.files.length > 0) {
       const fileUrl = URL.createObjectURL(e.target.files[0]);
       setFile(fileUrl);
     }
   }
 
+  function onSubmit(formFields: Form) {
+    // console.log(formFields);
+    dispatch(setFormData(formFields));
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement & FormFields>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const { name, email, password, repeat, gender, accept, picture, country } =
+      form;
+
+    onSubmit({
+      name: name.value,
+      age: name.value,
+      email: email.value,
+      password: password.value,
+      repeat: repeat.value,
+      gender: gender.value,
+      accept: accept.checked,
+      picture: picture.value,
+      country: country.value,
+    } as Form);
+  }
+
   return (
     <div className={styles.wrapper}>
       <h1 className={styles.title}>Uncontrolled components approach</h1>
-      <form className={styles.form} action="">
+      <form className={styles.form} action="" onSubmit={handleSubmit}>
         <div className={styles.row}>
           <div className={styles.labelInput}>
             <label htmlFor="name">Name</label>
-            <input type="text" placeholder="Dimash" id="name" />
+            <input name="name" type="text" placeholder="Dimash" id="name" />
           </div>
           <div className={styles.labelInput}>
             <label htmlFor="age">Age</label>
-            <input type="text" placeholder="28" id="age" />
+            <input name="age" type="text" placeholder="28" id="age" />
           </div>
         </div>
         <div className={styles.labelInput}>
           <label htmlFor="email">Email</label>
           <input
             className={styles.email}
+            name="email"
             type="text"
             placeholder="user@mail.com"
             id="email"
@@ -44,11 +74,16 @@ export const UncontrolledComponentsApproach = () => {
         <div className={styles.row}>
           <div className={styles.labelInput}>
             <label htmlFor="password">Password</label>
-            <input type="text" placeholder="1Aa!" id="password" />
+            <input
+              name="password"
+              type="text"
+              placeholder="1Aa!"
+              id="password"
+            />
           </div>
           <div className={styles.labelInput}>
             <label htmlFor="repeat">Repeat password</label>
-            <input type="text" placeholder="1Aa!" id="repeat" />
+            <input name="repeat" type="text" placeholder="1Aa!" id="repeat" />
           </div>
         </div>
 
@@ -57,22 +92,22 @@ export const UncontrolledComponentsApproach = () => {
             <div>
               <input
                 type="radio"
-                name="topping"
+                name="gender"
                 value="Male"
                 id="male"
-                checked={topping === 'Male'}
-                onChange={(e) => setTopping(e.target.value)}
+                checked={gender === 'Male'}
+                onChange={(e) => setGender(e.target.value)}
               />
               <label htmlFor="male">Male</label>
             </div>
             <div>
               <input
                 type="radio"
-                name="topping"
+                name="gender"
                 value="Female"
                 id="female"
-                checked={topping === 'Female'}
-                onChange={(e) => setTopping(e.target.value)}
+                checked={gender === 'Female'}
+                onChange={(e) => setGender(e.target.value)}
               />
               <label htmlFor="female">Female</label>
             </div>
@@ -90,6 +125,7 @@ export const UncontrolledComponentsApproach = () => {
           <div className={styles.labelInput}>
             <label htmlFor="picture">Upload picture</label>
             <input
+              name="picture"
               type="file"
               onChange={handleChange}
               placeholder="Picture"
@@ -99,10 +135,8 @@ export const UncontrolledComponentsApproach = () => {
           </div>
           <div className={styles.labelInput}>
             <label htmlFor="country">Select country</label>
-            <select className={styles.select}>
-              <option selected value="coconut">
-                Kazakhstan
-              </option>
+            <select name="country" className={styles.select} id="country">
+              <option defaultValue="coconut">Kazakhstan</option>
               <option value="grapefruit">Grapefruit</option>
               <option value="lime">Lime</option>
               <option value="mango">Mango</option>
@@ -111,6 +145,37 @@ export const UncontrolledComponentsApproach = () => {
         </div>
         <button>Submit</button>
       </form>
+
+      <table className={styles.table}>
+        <thead className={styles.thead}>
+          <tr className={styles.tr}>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Password repeat</th>
+            <th>Gender</th>
+            <th>Accept</th>
+            <th>Picture</th>
+            <th>Country</th>
+          </tr>
+        </thead>
+        {formData.map((data, index) => (
+          <tbody key={index}>
+            <tr className={styles.tr}>
+              <td>{data.name}</td>
+              <td>{data.age}</td>
+              <td>{data.email}</td>
+              <td>{data.password}</td>
+              <td>{data.repeat}</td>
+              <td>{data.gender}</td>
+              <td>{data.accept}</td>
+              <td>{data.picture}</td>
+              <td>{data.country}</td>
+            </tr>
+          </tbody>
+        ))}
+      </table>
     </div>
   );
 };
@@ -124,7 +189,12 @@ interface CheckboxProps {
 const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
   return (
     <label>
-      <input type="checkbox" checked={value} onChange={onChange} />
+      <input
+        name="accept"
+        type="checkbox"
+        checked={value}
+        onChange={onChange}
+      />
       {label}
     </label>
   );

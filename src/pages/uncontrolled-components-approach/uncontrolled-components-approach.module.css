@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 40px;
 }
 
 .title {
@@ -79,4 +80,34 @@ button:active {
 
 button:disabled {
   color: #ccc;
+}
+
+table {
+  border-collapse: collapse;
+  max-width: 100rem;
+  width: 100%;
+}
+
+table td,
+table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #ddd;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04aa6d;
+  color: white;
+  text-align: center;
 }
