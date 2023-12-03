@@ -1,9 +1,12 @@
 import { useState, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { setFormData, useAppDispatch } from '../../store';
 import { Form } from '../../types/form';
 import { FormFields } from '../../types/form-fields';
+import * as yup from 'yup';
+import { formSchema } from '../../validations/form-validation';
+import { countries } from '../../constants/countries';
 import styles from './uncontrolled-components-approach.module.css';
-import { useNavigate } from 'react-router-dom';
 
 export const UncontrolledComponentsApproach = () => {
   const dispatch = useAppDispatch();
@@ -20,34 +23,45 @@ export const UncontrolledComponentsApproach = () => {
   }
 
   function onSubmit(formFields: Form) {
-    // console.log(formFields);
     dispatch(setFormData(formFields));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement & FormFields>) {
+  async function handleSubmit(
+    e: React.FormEvent<HTMLFormElement & FormFields>
+  ) {
     e.preventDefault();
     const form = e.currentTarget;
-    const { name, email, password, repeat, gender, picture, country } = form;
+    const { name, age, email, password, confirmPassword, gender, country } =
+      form;
 
-    onSubmit({
+    const formData = {
       name: name.value,
-      age: name.value,
+      age: +age.value,
       email: email.value,
       password: password.value,
-      repeat: repeat.value,
+      confirmPassword: confirmPassword.value,
       gender: gender.value,
       accept: checked ? 'Yes' : 'No',
-      picture: picture.value,
+      picture: file,
       country: country.value,
-    } as Form);
+    } as Form;
 
-    navigate('/');
+    try {
+      await formSchema.validate(formData, { abortEarly: false });
+      onSubmit(formData);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        console.error('Validation failed:', err.errors);
+        alert(err.errors);
+      }
+    }
   }
 
   return (
     <div className={styles.wrapper}>
       <h1 className={styles.title}>Uncontrolled components approach</h1>
-      <form className={styles.form} action="" onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <div className={styles.labelInput}>
             <label htmlFor="name">Name</label>
@@ -79,8 +93,13 @@ export const UncontrolledComponentsApproach = () => {
             />
           </div>
           <div className={styles.labelInput}>
-            <label htmlFor="repeat">Repeat password</label>
-            <input name="repeat" type="text" placeholder="1Aa!" id="repeat" />
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              name="confirmPassword"
+              type="text"
+              placeholder="1Aa!"
+              id="confirmPassword"
+            />
           </div>
         </div>
 
@@ -136,9 +155,11 @@ export const UncontrolledComponentsApproach = () => {
             <label htmlFor="country">Select country</label>
             <select name="country" className={styles.select} id="country">
               <option defaultValue="coconut">Kazakhstan</option>
-              <option value="grapefruit">Grapefruit</option>
-              <option value="lime">Lime</option>
-              <option value="mango">Mango</option>
+              {countries.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>

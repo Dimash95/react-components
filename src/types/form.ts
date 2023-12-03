@@ -1,9 +1,9 @@
 export type Form = {
   name: string;
-  age: string;
+  age: number;
   email: string;
   password: string;
-  repeat: string;
+  confirmPassword: string;
   gender: string;
   accept: string;
   picture: string;

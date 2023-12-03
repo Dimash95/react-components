@@ -41,10 +41,20 @@ export const Home = () => {
               <td>{data.age}</td>
               <td>{data.email}</td>
               <td>{data.password}</td>
-              <td>{data.repeat}</td>
+              <td>{data.confirmPassword}</td>
               <td>{data.gender}</td>
               <td>{data.accept}</td>
-              <td>{data.picture}</td>
+              <td>
+                {data.picture ? (
+                  <img
+                    src={data.picture}
+                    alt="img"
+                    style={{ width: '100px' }}
+                  />
+                ) : (
+                  'No'
+                )}
+              </td>
               <td>{data.country}</td>
             </tr>
           </tbody>

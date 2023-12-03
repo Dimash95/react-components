@@ -3,7 +3,7 @@ export type FormFields = {
   age: HTMLInputElement;
   email: HTMLInputElement;
   password: HTMLInputElement;
-  repeat: HTMLInputElement;
+  confirmPassword: HTMLInputElement;
   gender: HTMLInputElement;
   accept: HTMLInputElement;
   picture: HTMLInputElement;
