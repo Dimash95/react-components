@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import styles from './home.module.css';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../store/hooks';
+import { useEffect } from 'react';
 
 export const Home = () => {
   const formData = useAppSelector((state) => state.formData);
   console.log(formData);
+
+  useEffect(() => {}, [formData]);
 
   return (
     <div className={styles.wrapper}>

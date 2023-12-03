@@ -5,7 +5,7 @@ export type Form = {
   password: string;
   repeat: string;
   gender: string;
-  accept: boolean;
+  accept: string;
   picture: string;
   country: string;
 };

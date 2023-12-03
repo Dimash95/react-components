@@ -3,18 +3,14 @@ import { setFormData, useAppDispatch } from '../../store';
 import { Form } from '../../types/form';
 import { FormFields } from '../../types/form-fields';
 import styles from './uncontrolled-components-approach.module.css';
-import { useAppSelector } from '../../store';
+import { useNavigate } from 'react-router-dom';
 
 export const UncontrolledComponentsApproach = () => {
   const dispatch = useAppDispatch();
-  const [gender, setGender] = useState('Medium');
-  const [checkedOne, setCheckedOne] = useState(false);
+  const navigate = useNavigate();
+  const [gender, setGender] = useState('Male');
+  const [checked, setChecked] = useState(false);
   const [file, setFile] = useState('');
-  const formData = useAppSelector((state) => state.formData);
-  console.log(formData);
-  const handleChangeOne = () => {
-    setCheckedOne(!checkedOne);
-  };
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
@@ -31,8 +27,7 @@ export const UncontrolledComponentsApproach = () => {
   function handleSubmit(e: React.FormEvent<HTMLFormElement & FormFields>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const { name, email, password, repeat, gender, accept, picture, country } =
-      form;
+    const { name, email, password, repeat, gender, picture, country } = form;
 
     onSubmit({
       name: name.value,
@@ -41,10 +36,12 @@ export const UncontrolledComponentsApproach = () => {
       password: password.value,
       repeat: repeat.value,
       gender: gender.value,
-      accept: accept.checked,
+      accept: checked ? 'Yes' : 'No',
       picture: picture.value,
       country: country.value,
     } as Form);
+
+    navigate('/');
   }
 
   return (
@@ -112,14 +109,16 @@ export const UncontrolledComponentsApproach = () => {
               <label htmlFor="female">Female</label>
             </div>
           </div>
-          {/* <p>
-          Selected gender: <strong>{topping}</strong>
-        </p> */}
-          <Checkbox
-            label="Accept T&C"
-            value={checkedOne}
-            onChange={handleChangeOne}
-          />
+          <div>
+            <label htmlFor="accept"> Accept T&C</label>
+            <input
+              name="accept"
+              type="checkbox"
+              checked={checked}
+              onChange={() => setChecked(!checked)}
+              id="accept"
+            />
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.labelInput}>
@@ -145,57 +144,6 @@ export const UncontrolledComponentsApproach = () => {
         </div>
         <button>Submit</button>
       </form>
-
-      <table className={styles.table}>
-        <thead className={styles.thead}>
-          <tr className={styles.tr}>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Password repeat</th>
-            <th>Gender</th>
-            <th>Accept</th>
-            <th>Picture</th>
-            <th>Country</th>
-          </tr>
-        </thead>
-        {formData.map((data, index) => (
-          <tbody key={index}>
-            <tr className={styles.tr}>
-              <td>{data.name}</td>
-              <td>{data.age}</td>
-              <td>{data.email}</td>
-              <td>{data.password}</td>
-              <td>{data.repeat}</td>
-              <td>{data.gender}</td>
-              <td>{data.accept}</td>
-              <td>{data.picture}</td>
-              <td>{data.country}</td>
-            </tr>
-          </tbody>
-        ))}
-      </table>
     </div>
-  );
-};
-
-interface CheckboxProps {
-  label: string;
-  value: boolean;
-  onChange: () => void;
-}
-
-const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
-  return (
-    <label>
-      <input
-        name="accept"
-        type="checkbox"
-        checked={value}
-        onChange={onChange}
-      />
-      {label}
-    </label>
   );
 };
