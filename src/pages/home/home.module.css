@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 40px;
+}
+
+.formLinks {
+  display: flex;
+  gap: 2rem;
+}
+
+.form {
+  font-size: 32px;
+  color: #000;
+  text-decoration: none;
+}
+
+.form:hover {
+  text-decoration: underline;
+}
